@@ -134,4 +134,4 @@ Para más información sobre el proyecto LexiMus:
 
 ---
 
-**Proyecto LexiMus** | PID2022-139589NB-C33 | 2024
+**Proyecto LexiMus** | PID2022-139589NB-C33 | 2025
