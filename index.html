@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conferencias y Cursos de Música Electrónica en España (1961-1984) | LexiMus</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .project-info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.95em;
+        }
+
+        .project-info strong {
+            color: #ffd700;
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 25px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #2a5298;
+            font-size: 0.9em;
+        }
+
+        input, select {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .charts-section {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .chart-container h3 {
+            margin-bottom: 20px;
+            color: #2a5298;
+            text-align: center;
+        }
+
+        .timeline {
+            padding: 30px;
+        }
+
+        .timeline-item {
+            background: white;
+            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-size: 1.3em;
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+
+        .timeline-location {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        .timeline-speaker {
+            font-weight: 600;
+            color: #764ba2;
+            margin-bottom: 8px;
+        }
+
+        .timeline-details {
+            color: #555;
+            line-height: 1.8;
+            margin-top: 10px;
+        }
+
+        .timeline-source {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        footer {
+            background: #2a5298;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .credits {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .credits h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .credits p {
+            margin: 8px 0;
+            opacity: 0.9;
+        }
+
+        .data-download {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .data-download a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid #ffd700;
+            transition: all 0.3s;
+        }
+
+        .data-download a:hover {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Conferencias y Cursos de Música Electrónica en España</h1>
+            <p>1961-1984</p>
+            <div class="project-info">
+                <p><strong>Proyecto LexiMus:</strong> Léxico y ontología de la música en español</p>
+                <p><strong>PID:</strong> PID2022-139589NB-C33</p>
+                <p>Universidad de Salamanca | Instituto Complutense de Ciencias Musicales | Universidad de La Rioja</p>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="filter-group">
+                <label for="searchInput">Buscar:</label>
+                <input type="text" id="searchInput" placeholder="Buscar por título, conferenciante o lugar...">
+            </div>
+
+            <div class="filter-group">
+                <label for="yearFilter">Año:</label>
+                <select id="yearFilter">
+                    <option value="">Todos los años</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="speakerFilter">Conferenciante:</label>
+                <select id="speakerFilter">
+                    <option value="">Todos los conferenciantes</option>
+                </select>
+            </div>
+
+            <button onclick="resetFilters()">Limpiar filtros</button>
+        </div>
+
+        <div class="stats" id="stats"></div>
+
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3>Eventos por Año</h3>
+                <canvas id="yearChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Principales Conferenciantes</h3>
+                <canvas id="speakerChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Ciudades con más eventos</h3>
+                <canvas id="cityChart"></canvas>
+            </div>
+        </div>
+
+        <div class="timeline" id="timeline"></div>
+
+        <footer>
+            <h2>Sobre este proyecto</h2>
+            <p>Esta visualización presenta un catálogo cronológico de conferencias y cursos sobre música electrónica registrados en la prensa española entre 1961 y 1984, documentando el desarrollo y difusión de la música electroacústica en España durante más de dos décadas.</p>
+
+            <div class="data-download">
+                <h3>Datos abiertos</h3>
+                <p>Los datos de este proyecto están disponibles en formato JSON para su reutilización en otros trabajos de investigación.</p>
+                <p><a href="data.json" download>Descargar datos en formato JSON</a></p>
+                <p style="font-size: 0.9em; margin-top: 10px;">Licencia: Datos de libre uso para investigación académica con atribución apropiada</p>
+            </div>
+
+            <div class="credits">
+                <h3>Créditos</h3>
+                <p><strong>Proyecto:</strong> LexiMus - Léxico y ontología de la música en español</p>
+                <p><strong>Referencia:</strong> PID2022-139589NB-C33</p>
+                <p><strong>Instituciones:</strong> Universidad de Salamanca, Instituto Complutense de Ciencias Musicales, Universidad de La Rioja</p>
+                <p><strong>Investigadora:</strong> Marina Hervás Muñoz (Universidad de Granada)</p>
+                <p><strong>Año:</strong> 2024</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let eventosData = [];
+        let filteredData = [];
+
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                eventosData = data.eventos;
+                filteredData = [...eventosData];
+                initializeApp();
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        function initializeApp() {
+            populateFilters();
+            updateStats();
+            createCharts();
+            displayTimeline();
+        }
+
+        function populateFilters() {
+            const years = [...new Set(eventosData.map(e => e.año))].sort();
+            const yearSelect = document.getElementById('yearFilter');
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+
+            const speakers = [...new Set(eventosData.map(e => e.conferenciante))].sort();
+            const speakerSelect = document.getElementById('speakerFilter');
+            speakers.forEach(speaker => {
+                const option = document.createElement('option');
+                option.value = speaker;
+                option.textContent = speaker;
+                speakerSelect.appendChild(option);
+            });
+
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('yearFilter').addEventListener('change', applyFilters);
+            document.getElementById('speakerFilter').addEventListener('change', applyFilters);
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const yearFilter = document.getElementById('yearFilter').value;
+            const speakerFilter = document.getElementById('speakerFilter').value;
+
+            filteredData = eventosData.filter(evento => {
+                const matchesSearch = searchTerm === '' ||
+                    evento.titulo.toLowerCase().includes(searchTerm) ||
+                    evento.conferenciante.toLowerCase().includes(searchTerm) ||
+                    evento.lugar.toLowerCase().includes(searchTerm) ||
+                    evento.otros.toLowerCase().includes(searchTerm);
+
+                const matchesYear = yearFilter === '' || evento.año.toString() === yearFilter;
+                const matchesSpeaker = speakerFilter === '' || evento.conferenciante === speakerFilter;
+
+                return matchesSearch && matchesYear && matchesSpeaker;
+            });
+
+            updateStats();
+            displayTimeline();
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('yearFilter').value = '';
+            document.getElementById('speakerFilter').value = '';
+            filteredData = [...eventosData];
+            updateStats();
+            displayTimeline();
+        }
+
+        function updateStats() {
+            const totalEvents = filteredData.length;
+            const years = [...new Set(filteredData.map(e => e.año))].length;
+            const speakers = [...new Set(filteredData.map(e => e.conferenciante))].length;
+            const cities = [...new Set(filteredData.map(e => {
+                const match = e.lugar.match(/\((.*?)\)/);
+                return match ? match[1] : e.lugar.split(',')[0];
+            }))].length;
+
+            const statsHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${totalEvents}</div>
+                    <div class="stat-label">Eventos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${years}</div>
+                    <div class="stat-label">Años</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${speakers}</div>
+                    <div class="stat-label">Conferenciantes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${cities}</div>
+                    <div class="stat-label">Ciudades</div>
+                </div>
+            `;
+            document.getElementById('stats').innerHTML = statsHTML;
+        }
+
+        function createCharts() {
+            createYearChart();
+            createSpeakerChart();
+            createCityChart();
+        }
+
+        function createYearChart() {
+            const yearCounts = {};
+            eventosData.forEach(evento => {
+                yearCounts[evento.año] = (yearCounts[evento.año] || 0) + 1;
+            });
+
+            const ctx = document.getElementById('yearChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(yearCounts).sort(),
+                    datasets: [{
+                        label: 'Número de eventos',
+                        data: Object.keys(yearCounts).sort().map(year => yearCounts[year]),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createSpeakerChart() {
+            const speakerCounts = {};
+            eventosData.forEach(evento => {
+                const speakers = evento.conferenciante.split(',');
+                speakers.forEach(speaker => {
+                    const name = speaker.trim();
+                    if (name && name !== 'Desconocido') {
+                        speakerCounts[name] = (speakerCounts[name] || 0) + 1;
+                    }
+                });
+            });
+
+            const sortedSpeakers = Object.entries(speakerCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8);
+
+            const ctx = document.getElementById('speakerChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedSpeakers.map(s => s[0]),
+                    datasets: [{
+                        label: 'Eventos',
+                        data: sortedSpeakers.map(s => s[1]),
+                        backgroundColor: 'rgba(118, 75, 162, 0.8)',
+                        borderColor: '#764ba2',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createCityChart() {
+            const cityCounts = {};
+            eventosData.forEach(evento => {
+                const match = evento.lugar.match(/\((.*?)\)/);
+                const city = match ? match[1] : evento.lugar.split(',')[0].trim();
+                if (city) {
+                    cityCounts[city] = (cityCounts[city] || 0) + 1;
+                }
+            });
+
+            const sortedCities = Object.entries(cityCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 6);
+
+            const ctx = document.getElementById('cityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: sortedCities.map(c => c[0]),
+                    datasets: [{
+                        data: sortedCities.map(c => c[1]),
+                        backgroundColor: [
+                            '#667eea',
+                            '#764ba2',
+                            '#f093fb',
+                            '#4facfe',
+                            '#43e97b',
+                            '#fa709a'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function displayTimeline() {
+            const timelineDiv = document.getElementById('timeline');
+
+            if (filteredData.length === 0) {
+                timelineDiv.innerHTML = '<div class="no-results">No se encontraron eventos con los filtros aplicados.</div>';
+                return;
+            }
+
+            const sortedData = [...filteredData].sort((a, b) => a.año - b.año);
+
+            const timelineHTML = sortedData.map(evento => `
+                <div class="timeline-item">
+                    <div class="timeline-date">${evento.fecha}</div>
+                    <div class="timeline-title">${evento.titulo}</div>
+                    <div class="timeline-location">${evento.lugar}</div>
+                    <div class="timeline-speaker"><strong>Conferenciante:</strong> ${evento.conferenciante}</div>
+                    ${evento.otros ? `<div class="timeline-details"><strong>Otros:</strong> ${evento.otros}</div>` : ''}
+                    ${evento.fuente ? `<div class="timeline-source"><strong>Fuente:</strong> ${evento.fuente}</div>` : ''}
+                </div>
+            `).join('');
+
+            timelineDiv.innerHTML = timelineHTML;
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
